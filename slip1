@@ -13,62 +13,81 @@ public class Slip1AlphabetDisplay {
 }
 
 set b
-import java.awt.GridLayout;
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
+
 import javax.swing.*;
 
-public class finalSLip1Q2Emp extends JFrame {
-    JLabel[] labels = { new JLabel("Employee No:"), new JLabel("Employee Name:"),
-                        new JLabel("Designation:"), new JLabel("Salary:") };
-    JTextField[] fields = { new JTextField(10), new JTextField(10),
-                            new JTextField(10), new JTextField(10) };
-    JButton saveButton = new JButton("Save");
-    JButton cancelButton = new JButton("Cancel");
+public class slip1Q2EmployeeDetails extends JFrame implements ActionListener {
+    private static final long serialVersionUID = 1L;
+    JLabel enoLabel, enameLabel, desigLabel, salaryLabel;
+    JTextField enoField, enameField, desigField, salaryField;
+    JButton addButton;
+    Connection con;
 
-    public finalSLip1Q2Emp() {
+    public slip1Q2EmployeeDetails() {
+        enoLabel = new JLabel("Employee No:");
+        enameLabel = new JLabel("Employee Name:");
+        desigLabel = new JLabel("Designation:");
+        salaryLabel = new JLabel("Salary:");
+
+        enoField = new JTextField();
+        enameField = new JTextField();
+        desigField = new JTextField();
+        salaryField = new JTextField();
+
+        addButton = new JButton("Add Employee");
+        addButton.addActionListener(this);
+
+        JPanel panel = new JPanel(new GridLayout(5, 2));
+        panel.add(enoLabel);
+        panel.add(enoField);
+        panel.add(enameLabel);
+        panel.add(enameField);
+        panel.add(desigLabel);
+        panel.add(desigField);
+        panel.add(salaryLabel);
+        panel.add(salaryField);
+        panel.add(new JLabel(""));
+        panel.add(addButton);
+
+        add(panel);
         setTitle("Employee Details");
-        setSize(400, 300);
-        setLayout(new GridLayout(5, 2));
+        setSize(300, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
-        for (int i = 0; i < labels.length; i++) {
-            add(labels[i]);
-            add(fields[i]);
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "");
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
         }
-
-        add(saveButton);
-        saveButton.addActionListener(e -> saveRecord());
-
-        add(cancelButton);
-        cancelButton.addActionListener(e -> System.exit(0));
-
-        setVisible(true);
     }
 
-    private void saveRecord() {
-        String eno = fields[0].getText();
-        String ename = fields[1].getText();
-        String desig = fields[2].getText();
-        String salary = fields[3].getText();
-
-        try (Connection con = DriverManager.getConnection("jdbc:psql://localhost:192.168.1.254/ty61""ty61""ty61");                PreparedStatement pstmt = con.prepareStatement("INSERT INTO emp VALUES (?, ?, ?, ?)");) {
-
-            pstmt.setString(1, eno);
-            pstmt.setString(2, ename);
-            pstmt.setString(3, desig);
-            pstmt.setString(4, salary);
-
-            int rows = pstmt.executeUpdate();
-            if (rows > 0) {
-                JOptionPane.showMessageDialog(this, "Record inserted successfully");
-            }
+    public void actionPerformed(ActionEvent e) {
+        String eno = enoField.getText();
+        String ename = enameField.getText();
+        String desig = desigField.getText();
+        String salary = salaryField.getText();
+        try {
+            Statement stmt = con.createStatement();
+            String query = "INSERT INTO employee (eno, ename, designation, salary) VALUES (" + eno + ", '" + ename + "', '" + desig + "', " + salary + ")";
+            stmt.executeUpdate(query);
+            JOptionPane.showMessageDialog(this, "Employee added successfully!");
+            enoField.setText("");
+            enameField.setText("");
+            desigField.setText("");
+            salaryField.setText("");
         } catch (SQLException ex) {
-            System.out.println(ex);
+            JOptionPane.showMessageDialog(this, "Error adding employee!");
+            ex.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        new finalSLip1Q2Emp();
+        new slip1Q2EmployeeDetails().setVisible(true);
     }
 }
