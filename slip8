@@ -1,0 +1,67 @@
+set a
+public class PrintThread implements Runnable {
+    
+    private String text;
+    private int count;
+    
+    public PrintThread(String text, int count) {
+        this.text = text;
+        this.count = count;
+    }
+    
+    public void run() {
+        for (int i = 0; i < count; i++) {
+            System.out.println(text);
+            try {
+                Thread.sleep(100); // add a small delay to make it easier to see the output
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        Thread t1 = new Thread(new PrintThread("COVID19", 10));
+        Thread t2 = new Thread(new PrintThread("LOCKDOWN2020", 20));
+        Thread t3 = new Thread(new PrintThread("VACCINATED2021", 30));
+        
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
+
+set b
+<%@ page language="java" %>
+<html>
+<head>
+<title>Prime Checker</title>
+</head>
+<body>
+    <h1>Prime Checker</h1>
+    <%
+        int num = Integer.parseInt(request.getParameter("num"));
+        boolean isPrime = true;
+        
+        if (num < 2) {
+            isPrime = false;
+        } else {
+            for (int i = 2; i <= Math.sqrt(num); i++) {
+                if (num % i == 0) {
+                    isPrime = false;
+                    break;
+                }
+            }
+        }
+        
+        String result = isPrime ? num + " is prime" : num + " is not prime";
+    %>
+    
+    <p style="color: red"><%= result %></p>
+    
+    <form method="get">
+        Enter a number: <input type="number" name="num"><br>
+        <input type="submit" value="Check">
+    </form>
+</body>
+</html>
