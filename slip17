@@ -1,0 +1,93 @@
+set a
+
+import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
+
+public class SortedIntegers {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter the number of integers: ");
+        int n = sc.nextInt();
+
+        Set<Integer> set = new TreeSet<>();
+
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter integer " + (i+1) + ": ");
+            int num = sc.nextInt();
+            set.add(num);
+        }
+
+        System.out.print("The integers in sorted order are: ");
+        for (int num : set) {
+            System.out.print(num + " ");
+        }
+    }
+}
+
+set b
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Counter extends JFrame implements ActionListener, Runnable {
+    private JTextField textField;
+    private JButton button;
+    private Thread thread;
+    private boolean isRunning;
+
+    public Counter() {
+        super("Counter");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(300, 100);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+
+        textField = new JTextField();
+        textField.setEditable(false);
+        add(textField, BorderLayout.CENTER);
+
+        button = new JButton("Start");
+        button.addActionListener(this);
+        add(button, BorderLayout.SOUTH);
+
+        setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == button) {
+            if (thread == null || !isRunning) {
+                thread = new Thread(this);
+                isRunning = true;
+                thread.start();
+                button.setText("Stop");
+            } else {
+                isRunning = false;
+                button.setText("Start");
+            }
+        }
+    }
+
+    @Override
+    public void run() {
+        int count = 1;
+        while (isRunning) {
+            textField.setText(String.valueOf(count));
+            count++;
+            if (count > 100) {
+                count = 1;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new Counter();
+    }
+}
