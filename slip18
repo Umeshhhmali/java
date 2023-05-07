@@ -1,0 +1,67 @@
+set a
+public class Slip18ThreadDetails {
+    public static void main(String[] args) {
+        Thread currentThread = Thread.currentThread();
+        System.out.println("Thread name: " + currentThread.getName());
+        System.out.println("Thread priority: " + currentThread.getPriority());
+    }
+}
+
+
+set b
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class Slip18StudentDetails extends HttpServlet {
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Set the response content type
+        response.setContentType("text/html");
+        
+        // Get the parameters from the request
+        int seatNo = Integer.parseInt(request.getParameter("seatNo"));
+        String studName = request.getParameter("studName");
+        String studClass = request.getParameter("studClass");
+        int totalMarks = Integer.parseInt(request.getParameter("totalMarks"));
+        
+        // Calculate the percentage and grade
+        double percentage = (double) totalMarks / 500 * 100;
+        String grade;
+        if (percentage >= 90) {
+            grade = "A+";
+        } else if (percentage >= 80) {
+            grade = "A";
+        } else if (percentage >= 70) {
+            grade = "B+";
+        } else if (percentage >= 60) {
+            grade = "B";
+        } else if (percentage >= 50) {
+            grade = "C+";
+        } else if (percentage >= 40) {
+            grade = "C";
+        } else {
+            grade = "Fail";
+        }
+        
+        // Create the HTML response
+        PrintWriter out = response.getWriter();
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>Student Details</title>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<h2>Student Details:</h2>");
+        out.println("<table>");
+        out.println("<tr><td>Seat No:</td><td>" + seatNo + "</td></tr>");
+        out.println("<tr><td>Name:</td><td>" + studName + "</td></tr>");
+        out.println("<tr><td>Class:</td><td>" + studClass + "</td></tr>");
+        out.println("<tr><td>Total Marks:</td><td>" + totalMarks + "</td></tr>");
+        out.println("<tr><td>Percentage:</td><td>" + percentage + "%</td></tr>");
+        out.println("<tr><td>Grade:</td><td>" + grade + "</td></tr>");
+        out.println("</table>");
+        out.println("</body>");
+        out.println("</html>");
+    }
+}
