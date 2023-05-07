@@ -1,0 +1,38 @@
+set a
+<%@ page language="java" %>
+<html>
+<head>
+    <title>Reverse String</title>
+</head>
+<body>
+    <form method="post">
+        <label>Enter a string: </label>
+        <input type="text" name="inputString">
+        <input type="submit" value="Reverse">
+    </form>
+
+    <%-- Get the input string from the user --%>
+    <%
+        String inputString = request.getParameter("inputString");
+        if (inputString != null) {
+            String reversedString = new StringBuilder(inputString).reverse().toString();
+            out.println("<p>Reverse string: " + reversedString + "</p>");
+        }
+    %>
+</body>
+</html>
+
+set b
+
+public class Slip28CurrentThreadName {
+    public static void main(String[] args) {
+        // create a new thread
+        Thread t = new Thread(() -> {
+            // print the name of the currently executing thread
+            System.out.println("Currently executing thread: " + Thread.currentThread().getName());
+        });
+
+        // start the thread
+        t.start();
+    }
+}
