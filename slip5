@@ -1,0 +1,105 @@
+set a
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+public class StudentDetails {
+    
+    public static void main(String[] args) {
+        Hashtable<Long, String> studentTable = new Hashtable<>();
+        
+        // Add some student details to the table
+        studentTable.put(1234567890L, "John");
+        studentTable.put(2345678901L, "Mary");
+        studentTable.put(3456789012L, "Alice");
+        studentTable.put(4567890123L, "Bob");
+        
+        // Use the Enumeration interface to display all student details
+        Enumeration<Long> mobileNumbers = studentTable.keys();
+        while (mobileNumbers.hasMoreElements()) {
+            long mobileNumber = mobileNumbers.nextElement();
+            String name = studentTable.get(mobileNumber);
+            System.out.println("Mobile Number: " + mobileNumber + " Name: " + name);
+        }
+    }
+}
+
+
+set b
+//test.jsp
+<%@ page import="java.sql.*" %>
+<%@ page import="java.util.*" %>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Online Test</title>
+</head>
+<body>
+	<h1>Online Test</h1>
+	<form method="post" action="score.jsp">
+		<%
+			// Connect to the database
+			Connection conn = null;
+			String url = "jdbc:mysql://localhost:3306/test";
+			String username = "root";
+			String password = "password";
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			conn = DriverManager.getConnection(url, username, password);
+
+			// Select 5 random questions from the database
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM questions ORDER BY RAND() LIMIT 5");
+
+			// Display each question and its choices
+			int questionNumber = 1;
+			while (rs.next()) {
+				String question = rs.getString("question");
+				String choice1 = rs.getString("choice1");
+				String choice2 = rs.getString("choice2");
+				String choice3 = rs.getString("choice3");
+				String choice4 = rs.getString("choice4");
+				String answer = rs.getString("answer");
+
+				// Display the question and choices as radio buttons
+				out.println("<p>" + questionNumber + ". " + question + "</p>");
+				out.println("<input type=\"radio\" name=\"q" + questionNumber + "\" value=\"a\">" + choice1 + "<br>");
+				out.println("<input type=\"radio\" name=\"q" + questionNumber + "\" value=\"b\">" + choice2 + "<br>");
+				out.println("<input type=\"radio\" name=\"q" + questionNumber + "\" value=\"c\">" + choice3 + "<br>");
+				out.println("<input type=\"radio\" name=\"q" + questionNumber + "\" value=\"d\">" + choice4 + "<br>");
+				out.println("<input type=\"hidden\" name=\"a" + questionNumber + "\" value=\"" + answer + "\">");
+
+				questionNumber++;
+			}
+
+			// Close the database connection
+			rs.close();
+			stmt.close();
+			conn.close();
+		%>
+		<input type="submit" value="Submit">
+	</form>
+</body>
+</html>
+
+
+//score.jsp
+
+<%@ page import="java.util.*" %>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Online Test Score</title>
+</head>
+<body>
+	<h1>Online Test Score</h1>
+	<%
+		// Initialize the score to 0
+		int score = 0;
+
+		// Check each answer submitted by the user
+		for (int i = 1; i <= 5; i++) {
+			String userAnswer = request.getParameter("q" + i);
+			String correctAnswer = request.getParameter("a" + i);
+			if (userAnswer != null && userAnswer.equals(correctAnswer)) {
+				score++;
