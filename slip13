@@ -1,0 +1,62 @@
+set a
+import java.sql.*;
+
+public class DatabaseInfo {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost/mydatabase";
+        String user = "root";
+        String password = "password";
+        
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            DatabaseMetaData metaData = conn.getMetaData();
+            
+            // Display information about the database
+            System.out.println("Database Name: " + metaData.getDatabaseProductName());
+            System.out.println("Database Version: " + metaData.getDatabaseProductVersion());
+            System.out.println("Driver Name: " + metaData.getDriverName());
+            System.out.println("Driver Version: " + metaData.getDriverVersion());
+            System.out.println();
+            
+            // List all the tables in the database
+            ResultSet rs = metaData.getTables(null, null, "%", new String[]{"TABLE"});
+            System.out.println("Tables in the database:");
+            while (rs.next()) {
+                System.out.println(rs.getString("TABLE_NAME"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
+
+set b
+public class ThreadLifecycle implements Runnable {
+
+    private String threadName;
+
+    public ThreadLifecycle(String name) {
+        threadName = name;
+    }
+
+    public void run() {
+        System.out.println(threadName + " created.");
+        int sleepTime = (int) (Math.random() * 5000);
+        System.out.println(threadName + " will sleep for " + sleepTime + " ms.");
+        try {
+            Thread.sleep(sleepTime);
+        } catch (InterruptedException e) {
+            System.out.println(threadName + " interrupted while sleeping.");
+        }
+        System.out.println(threadName + " has completed.");
+    }
+
+    public static void main(String[] args) {
+        Thread t1 = new Thread(new ThreadLifecycle("Thread 1"));
+        Thread t2 = new Thread(new ThreadLifecycle("Thread 2"));
+        Thread t3 = new Thread(new ThreadLifecycle("Thread 3"));
+
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
