@@ -1,0 +1,108 @@
+set a
+import java.util.LinkedList;
+import java.util.Scanner;
+
+public class Slip19NegativeIntLL {
+    public static void main(String[] args) {
+        LinkedList<Integer> list = new LinkedList<Integer>();
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the number of integers: ");
+        int n = sc.nextInt();
+
+        for (int i = 1; i <= n; i++) {
+            System.out.print("Enter integer " + i + ": ");
+            int num = sc.nextInt();
+            list.add(num);
+        }
+
+        System.out.println("Negative Integers: ");
+        for (int i = 0; i < list.size(); i++) {
+            int num = list.get(i);
+            if (num < 0) {
+                System.out.println(num);
+            }
+        }
+    }
+}
+
+set b
+import java.io.*;
+import java.sql.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class Slip19LoginServlet extends HttpServlet {
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        // Set response content type
+        response.setContentType("text/html");
+
+        // Get username and password from request parameters
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        // Create a Connection object to connect to the database
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String message = null;
+
+        try {
+            // Register JDBC driver
+            Class.forName("com.mysql.jdbc.Driver");
+
+            // Open a connection
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "");
+
+            // Prepare a statement to search for username and password in the database
+            String sql = "SELECT * FROM users WHERE username=? AND password=?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            rs = stmt.executeQuery();
+
+            // Check if username and password are found in the database
+            if (rs.next()) {
+                message = "Welcome " + username + "!";
+            } else {
+                message = "Invalid username or password!";
+            }
+        } catch (SQLException se) {
+            // Handle errors for JDBC
+            se.printStackTrace();
+        } catch (Exception e) {
+            // Handle errors for Class.forName
+            e.printStackTrace();
+        } finally {
+            // Clean-up environment
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException se2) {
+            } // nothing we can do
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (SQLException se2) {
+            } // nothing we can do
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+
+        // Write message to response
+        PrintWriter out = response.getWriter();
+        out.println("<html><body>");
+        out.println("<h1>" + message + "</h1>");
+        out.println("</body></html>");
+    }
+}
