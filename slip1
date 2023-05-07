@@ -1,0 +1,75 @@
+set a
+public class Slip1AlphabetDisplay {
+    public static void main(String[] args) {
+        for(char c = 'A'; c <= 'Z'; c++) {
+            System.out.print(c + " ");
+            try {
+                Thread.sleep(2000); // sleep for 2 seconds
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+set b
+import java.awt.GridLayout;
+import java.awt.event.*;
+import java.sql.*;
+import javax.swing.*;
+
+public class finalSLip1Q2Emp extends JFrame {
+    JLabel[] labels = { new JLabel("Employee No:"), new JLabel("Employee Name:"),
+                        new JLabel("Designation:"), new JLabel("Salary:") };
+    JTextField[] fields = { new JTextField(10), new JTextField(10),
+                            new JTextField(10), new JTextField(10) };
+    JButton saveButton = new JButton("Save");
+    JButton cancelButton = new JButton("Cancel");
+
+    public finalSLip1Q2Emp() {
+        setTitle("Employee Details");
+        setSize(400, 300);
+        setLayout(new GridLayout(5, 2));
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        for (int i = 0; i < labels.length; i++) {
+            add(labels[i]);
+            add(fields[i]);
+        }
+
+        add(saveButton);
+        saveButton.addActionListener(e -> saveRecord());
+
+        add(cancelButton);
+        cancelButton.addActionListener(e -> System.exit(0));
+
+        setVisible(true);
+    }
+
+    private void saveRecord() {
+        String eno = fields[0].getText();
+        String ename = fields[1].getText();
+        String desig = fields[2].getText();
+        String salary = fields[3].getText();
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "");
+                PreparedStatement pstmt = con.prepareStatement("INSERT INTO emp VALUES (?, ?, ?, ?)");) {
+
+            pstmt.setString(1, eno);
+            pstmt.setString(2, ename);
+            pstmt.setString(3, desig);
+            pstmt.setString(4, salary);
+
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                JOptionPane.showMessageDialog(this, "Record inserted successfully");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    public static void main(String[] args) {
+        new finalSLip1Q2Emp();
+    }
+}
