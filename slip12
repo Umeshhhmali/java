@@ -1,0 +1,126 @@
+set a
+index.jsp
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Check Perfect Number</title>
+</head>
+<body>
+	<h2>Check Perfect Number</h2>
+	<form method="post" action="check-perfect-number.jsp">
+		Enter a number: <input type="text" name="num">
+		<input type="submit" value="Check">
+	</form>
+</body>
+</html>
+
+check-perfect-number.jsp
+<%@page import="java.io.*, java.util.*" %>
+<%@page contentType="text/html" %>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Check Perfect Number</title>
+</head>
+<body>
+	<jsp:include page="header.jsp"></jsp:include>
+	<h2>Check Perfect Number</h2>
+	
+	<%
+		int num = Integer.parseInt(request.getParameter("num"));
+		int sum = 0;
+		for (int i = 1; i < num; i++) {
+			if (num % i == 0) {
+				sum += i;
+			}
+		}
+		if (sum == num) {
+			out.println("<p>" + num + " is a perfect number.</p>");
+		} else {
+			out.println("<p>" + num + " is not a perfect number.</p>");
+		}
+	%>
+	
+	<jsp:include page="footer.jsp"></jsp:include>
+</body>
+</html>
+
+
+header.jsp
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Check Perfect Number</title>
+</head>
+<body>
+</body>
+</html>
+
+
+
+set b
+import java.sql.*;
+import javax.swing.*;
+import java.awt.*;
+
+public class ProjectTable extends JFrame {
+
+    private JTable table;
+
+    public ProjectTable() {
+        setTitle("Project Table");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(500, 500);
+        setLocationRelativeTo(null);
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "");
+
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM PROJECT");
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columns = rsmd.getColumnCount();
+            String[] columnNames = new String[columns];
+            for (int i = 1; i <= columns; i++) {
+                columnNames[i - 1] = rsmd.getColumnName(i);
+            }
+
+            int rows = 0;
+            while (rs.next()) {
+                rows++;
+            }
+
+            rs.beforeFirst();
+
+            String[][] data = new String[rows][columns];
+            int row = 0;
+            while (rs.next()) {
+                for (int i = 1; i <= columns; i++) {
+                    data[row][i - 1] = rs.getString(i);
+                }
+                row++;
+            }
+
+            table = new JTable(data, columnNames);
+            JScrollPane scrollPane = new JScrollPane(table);
+            add(scrollPane, BorderLayout.CENTER);
+
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new ProjectTable();
+    }
+
+}
