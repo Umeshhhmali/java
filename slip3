@@ -1,0 +1,80 @@
+//Set a
+
+<%@page import="java.sql.*"%>
+<html>
+<head>
+    <title>Patient Details</title>
+</head>
+<body>
+    <h2>Patient Details</h2>
+    <table border="1">
+        <tr>
+            <th>PNo</th>
+            <th>PName</th>
+            <th>Address</th>
+            <th>Age</th>
+            <th>Disease</th>
+        </tr>
+        <% 
+            Connection conn = null;
+            Statement stmt = null;
+            ResultSet rs = null;
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "password");
+                stmt = conn.createStatement();
+                rs = stmt.executeQuery("SELECT * FROM patient");
+                while (rs.next()) {
+                    String pno = rs.getString("PNo");
+                    String pname = rs.getString("PName");
+                    String address = rs.getString("Address");
+                    int age = rs.getInt("Age");
+                    String disease = rs.getString("Disease");
+        %>
+        <tr>
+            <td><%= pno %></td>
+            <td><%= pname %></td>
+            <td><%= address %></td>
+            <td><%= age %></td>
+            <td><%= disease %></td>
+        </tr>
+        <% 
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try { rs.close(); } catch (Exception e) {}
+                try { stmt.close(); } catch (Exception e) {}
+                try { conn.close(); } catch (Exception e) {}
+            }
+        %>
+    </table>
+</body>
+</html>
+
+//set b
+
+import java.util.*;
+public class Slip3
+{
+	public static void main(String args[])
+	{
+		LinkedList<String>al=new LinkedList<String>();
+		al.add("Sakshi");
+		al.add("Jaee");
+		al.add("Rupali");
+		al.add("Suvani");
+		System.out.println("\n Linked list is:"+al);
+
+		al.addLast("Mansi");
+		System.out.println("\n Linked list after addding element:"+al);
+
+		String rm=al.removeFirst();
+		System.out.println("\n Removed element:"+rm);
+		System.out.println("\n Linked list after removing element:"+al);
+
+		Collections.reverse(al);
+		System.out.println("\n Elements after reversing:"+al);
+
+	}
+}
