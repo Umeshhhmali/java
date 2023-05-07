@@ -1,0 +1,107 @@
+set a
+
+import java.util.*;
+public class FriendsList {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter the number of friends: ");
+        int n = sc.nextInt();
+
+        Set<String> friends = new HashSet<String>();
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter name " + (i+1) + ": ");
+            String name = sc.next();
+            friends.add(name);
+        }
+
+        List<String> sortedFriends = new ArrayList<String>(friends);
+        Collections.sort(sortedFriends);
+
+        System.out.println("Friends in ascending order:");
+        for (String friend : sortedFriends) {
+            System.out.println(friend);
+        }
+    }
+}
+
+set b
+
+//index.html
+<html>
+	<body>
+		<a href="test"> -Click Here- </a>
+	</body>
+</html>
+
+//web.xml
+<web-app>
+	
+	<servlet>
+		<servlet-name>test</servlet-name>
+		<servlet-class>test</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>test</servlet-name>
+		<url-pattern>/test</url-pattern>
+	</servlet-mapping>
+	
+		<servlet>
+		<servlet-name>MyServletDemo</servlet-name>
+		<servlet-class>MyServletDemo</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>MyServletDemo</servlet-name>
+		<url-pattern>/MyServletDemo</url-pattern>
+	</servlet-mapping>
+</web-app>
+
+
+//test.java
+import java.io.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
+
+public class test extends HttpServlet {
+    
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        
+        String ipAddress = request.getRemoteAddr();
+        
+
+        String browserType = request.getHeader("User-Agent");
+        
+
+        String osType = System.getProperty("os.name");
+        
+
+        ServletContext context = getServletContext();
+        String[] servletNames = context.getServletRegistrations().keySet().toArray(new String[0]);
+        
+
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>Request Information</title>");
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<h1>Client Information:</h1>");
+        out.println("<p>IP Address: " + ipAddress + "</p>");
+        out.println("<p>Browser Type: " + browserType + "</p>");
+        out.println("<h1>Server Information:</h1>");
+        out.println("<p>Operating System Type: " + osType + "</p>");
+        out.println("<h1>Currently Loaded Servlets:</h1>");
+        out.println("<ul>");
+        for (String name : servletNames) {
+            out.println("<li>" + name + "</li>");
+        }
+        out.println("</ul>");
+        out.println("</body>");
+        out.println("</html>");
+    }
+}
+
