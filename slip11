@@ -1,0 +1,94 @@
+set a
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Search Customer</title>
+</head>
+<body>
+	<h1>Search Customer</h1>
+	<form action="search" method="post">
+		<label for="customerNumber">Customer Number:</label>
+		<input type="text" id="customerNumber" name="customerNumber" required>
+		<br>
+		<input type="submit" value="Search">
+	</form>
+</body>
+</html>
+
+
+import java.sql.*;
+
+public class CustomerSearchServlet {
+    public static void main(String[] args) {
+        String customerNumber = "123456"; // customer number to search for
+        String url = "jdbc:mysql://localhost:3306/mydatabase"; // database URL
+        String username = "myuser"; // database username
+        String password = "mypassword"; // database password
+        
+        try {
+            // establish database connection
+            Connection conn = DriverManager.getConnection(url, username, password);
+            
+            // create SQL statement to search for customer number
+            String sql = "SELECT * FROM customer WHERE customer_number = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, customerNumber);
+            
+            // execute SQL statement and get results
+            ResultSet rs = stmt.executeQuery();
+            
+            // check if customer was found and display details
+            if (rs.next()) {
+                String name = rs.getString("name");
+                String address = rs.getString("address");
+                String phone = rs.getString("phone");
+                System.out.println("Customer Details:");
+                System.out.println("Name: " + name);
+                System.out.println("Address: " + address);
+                System.out.println("Phone: " + phone);
+            } else {
+                System.out.println("Customer not found.");
+            }
+            
+            // close database resources
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+set b
+import java.sql.*;
+
+public class DonarTableInfo {
+    public static void main(String[] args) {
+        try {
+            // Step 1: Establishing a Connection
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "password");
+
+            // Step 2: Creating Statement
+            Statement statement = connection.createStatement();
+
+            // Step 3: Execute the query
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM DONAR");
+
+            // Step 4: Get metadata from the result set
+            ResultSetMetaData metaData = resultSet.getMetaData();
+
+            // Step 5: Display column information
+            int columns = metaData.getColumnCount();
+            for (int i = 1; i <= columns; i++) {
+                System.out.printf("Column Name: %s, Type: %s\n", metaData.getColumnName(i), metaData.getColumnTypeName(i));
+            }
+
+            // Step 6: Closing the Connection
+            connection.close();
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
