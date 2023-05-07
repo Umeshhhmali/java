@@ -1,0 +1,116 @@
+set a
+import java.sql.*;
+
+public class Slip22Employee {
+    
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/employee_db";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "password";
+    
+    public static void main(String[] args) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            Statement stmt = conn.createStatement();
+            
+            int choice = 0;
+            do {
+                System.out.println("\nMENU\n----");
+                System.out.println("1. Insert Employee");
+                System.out.println("2. Update Employee Salary");
+                System.out.println("3. Display Employees");
+                System.out.println("4. Exit");
+                System.out.print("\nEnter your choice: ");
+                choice = Integer.parseInt(System.console().readLine());
+                
+                switch (choice) {
+                    case 1:
+                        System.out.print("\nEnter Employee No: ");
+                        int eno = Integer.parseInt(System.console().readLine());
+                        System.out.print("Enter Employee Name: ");
+                        String ename = System.console().readLine();
+                        System.out.print("Enter Employee Salary: ");
+                        double salary = Double.parseDouble(System.console().readLine());
+                        String insertQuery = "INSERT INTO employee (ENo, EName, Salary) VALUES (" + eno + ", '" + ename + "', " + salary + ")";
+                        stmt.executeUpdate(insertQuery);
+                        System.out.println("\nEmployee inserted successfully.");
+                        break;
+                    case 2:
+                        System.out.print("\nEnter Employee No: ");
+                        eno = Integer.parseInt(System.console().readLine());
+                        System.out.print("Enter New Salary: ");
+                        salary = Double.parseDouble(System.console().readLine());
+                        String updateQuery = "UPDATE employee SET Salary = " + salary + " WHERE ENo = " + eno;
+                        int rowsAffected = stmt.executeUpdate(updateQuery);
+                        if (rowsAffected == 0) {
+                            System.out.println("\nNo employee found with Employee No " + eno + ".");
+                        } else {
+                            System.out.println("\nSalary updated successfully.");
+                        }
+                        break;
+                    case 3:
+                        String selectQuery = "SELECT * FROM employee";
+                        ResultSet rs = stmt.executeQuery(selectQuery);
+                        System.out.println("\nEmployee Details:\n-----------------");
+                        System.out.println("ENo\tEName\tSalary");
+                        while (rs.next()) {
+                            eno = rs.getInt("ENo");
+                            ename = rs.getString("EName");
+                            salary = rs.getDouble("Salary");
+                            System.out.println(eno + "\t" + ename + "\t" + salary);
+                        }
+                        break;
+                    case 4:
+                        System.out.println("\nThank you for using EmployeeTable. Goodbye!");
+                        break;
+                    default:
+                        System.out.println("\nInvalid choice. Please try again.");
+                }
+            } while (choice != 4);
+            
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+
+set b
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Greetings</title>
+</head>
+<body>
+    <form method="post">
+        <label>Enter your name:</label>
+        <input type="text" name="name" required>
+        <input type="submit" value="Submit">
+    </form>
+    
+    <%
+    String name = request.getParameter("name");
+    if(name != null && !name.isEmpty()) {
+        String greeting = "";
+        int hour = new java.util.Date().getHours();
+        if(hour < 12) {
+            greeting = "Good morning, ";
+        } else if(hour < 18) {
+            greeting = "Good afternoon, ";
+        } else {
+            greeting = "Good evening, ";
+        }
+        %>
+        <div> <%= greeting + name %> </div>
+        <%
+    }
+    %>
+</body>
+</html>
