@@ -1,0 +1,113 @@
+set a
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+public class BlinkingText implements Runnable {
+
+    private JLabel label;
+    
+    public BlinkingText(JLabel label) {
+        this.label = label;
+    }
+    
+    @Override
+    public void run() {
+        while (true) {
+            try {
+                Thread.sleep(500); // Blink every half second
+                label.setVisible(!label.isVisible());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        // Create a frame with a label containing the blinking text
+        JFrame frame = new JFrame();
+        JLabel label = new JLabel("Blinking Text");
+        frame.add(label);
+        frame.pack();
+        frame.setVisible(true);
+        
+        // Create a new thread for the blinking text and start it
+        BlinkingText blinkingText = new BlinkingText(label);
+        Thread thread = new Thread(blinkingText);
+        thread.start();
+    }
+}
+
+set b
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class CitySTDCode {
+
+    public static void main(String[] args) {
+        Map<String, String> citySTD = new HashMap<>();
+        Scanner scanner = new Scanner(System.in);
+        
+        // Add some initial city codes
+        citySTD.put("Delhi", "011");
+        citySTD.put("Mumbai", "022");
+        citySTD.put("Kolkata", "033");
+        citySTD.put("Chennai", "044");
+        
+        while (true) {
+            System.out.println("Enter your choice:");
+            System.out.println("1. Add a new city and its code");
+            System.out.println("2. Remove a city from the collection");
+            System.out.println("3. Search for a city name and display the code");
+            System.out.println("4. Exit");
+            int choice = scanner.nextInt();
+            
+            switch (choice) {
+                case 1:
+                    System.out.println("Enter city name:");
+                    String city = scanner.next();
+                    if (citySTD.containsKey(city)) {
+                        System.out.println("City already exists in the collection");
+                    } else {
+                        System.out.println("Enter STD code:");
+                        String stdCode = scanner.next();
+                        citySTD.put(city, stdCode);
+                        System.out.println("City added to the collection");
+                    }
+                    break;
+                    
+                case 2:
+                    System.out.println("Enter city name to remove:");
+                    String removeCity = scanner.next();
+                    if (citySTD.containsKey(removeCity)) {
+                        citySTD.remove(removeCity);
+                        System.out.println("City removed from the collection");
+                    } else {
+                        System.out.println("City does not exist in the collection");
+                    }
+                    break;
+                    
+                case 3:
+                    System.out.println("Enter city name to search for:");
+                    String searchCity = scanner.next();
+                    if (citySTD.containsKey(searchCity)) {
+                        System.out.println("STD code for " + searchCity + " is " + citySTD.get(searchCity));
+                    } else {
+                        System.out.println("City does not exist in the collection");
+                    }
+                    break;
+                    
+                case 4:
+                    System.out.println("Exiting program...");
+                    scanner.close();
+                    System.exit(0);
+                    
+                default:
+                    System.out.println("Invalid choice");
+            }
+        }
+    }
+
+}
+
