@@ -1,0 +1,51 @@
+set a
+public class ThreadInfo {
+    public static void main(String[] args) {
+        Thread currentThread = Thread.currentThread();
+        System.out.println("Thread name: " + currentThread.getName());
+        System.out.println("Thread priority: " + currentThread.getPriority());
+    }
+}
+
+set b
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/WelcomeServlet")
+public class WelcomeServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    private int visitCount;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        visitCount = 0;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("visitCount")) {
+                    visitCount = Integer.parseInt(cookie.getValue());
+                }
+            }
+        }
+        visitCount++;
+        Cookie visitCountCookie = new Cookie("visitCount", Integer.toString(visitCount));
+        visitCountCookie.setMaxAge(60 * 60 * 24);
+        response.addCookie(visitCountCookie);
+        out.println("<html><head><title>Welcome</title></head><body>");
+        if (visitCount == 1) {
+            out.println("<h1>Welcome to my website!</h1>");
+        } else {
+            out.println("<h1>You have visited this page " + visitCount + " times.</h1>");
+        }
+        out.println("</body></html>");
+    }
+}
