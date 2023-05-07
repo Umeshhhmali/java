@@ -52,7 +52,7 @@ public class finalSLip1Q2Emp extends JFrame {
         String desig = fields[2].getText();
         String salary = fields[3].getText();
 
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "");
+        try (Connection con=DriverManager.getConnection("jdbc:postgresql://192.168.1.254/ty33","ty33","ty33");
                 PreparedStatement pstmt = con.prepareStatement("INSERT INTO emp VALUES (?, ?, ?, ?)");) {
 
             pstmt.setString(1, eno);
