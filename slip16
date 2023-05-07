@@ -1,0 +1,91 @@
+set a
+
+
+import java.util.TreeSet;
+
+public class Slip16TreeSetExample {
+    public static void main(String[] args) {
+        TreeSet<String> colors = new TreeSet<>();
+
+        colors.add("Red");
+        colors.add("Green");
+        colors.add("Blue");
+        colors.add("Yellow");
+        colors.add("Purple");
+
+        System.out.println("Colors in ascending order:");
+        for (String color : colors) {
+            System.out.println(color);
+        }
+    }
+}
+
+
+set b
+
+import java.sql.*;
+
+public class Slip16TeacherExample {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/yourdb";
+        String username = "yourusername";
+        String password = "yourpassword";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = DriverManager.getConnection(url, username, password);
+
+            // Insert some records into the Teacher table
+            pstmt = conn.prepareStatement("INSERT INTO Teacher (YNO, TName, Subject) VALUES (?, ?, ?)");
+            pstmt.setInt(1, 1);
+            pstmt.setString(2, "John Doe");
+            pstmt.setString(3, "JAVA");
+            pstmt.executeUpdate();
+
+            pstmt.setInt(1, 2);
+            pstmt.setString(2, "Jane Doe");
+            pstmt.setString(3, "PHP");
+            pstmt.executeUpdate();
+
+            pstmt.setInt(1, 3);
+            pstmt.setString(2, "Bob Smith");
+            pstmt.setString(3, "JAVA");
+            pstmt.executeUpdate();
+
+            pstmt.setInt(1, 4);
+            pstmt.setString(2, "Alice Smith");
+            pstmt.setString(3, "Python");
+            pstmt.executeUpdate();
+
+            pstmt.setInt(1, 5);
+            pstmt.setString(2, "David Johnson");
+            pstmt.setString(3, "JAVA");
+            pstmt.executeUpdate();
+
+            // Display the details of the teacher who is teaching "JAVA" subject
+            pstmt = conn.prepareStatement("SELECT * FROM Teacher WHERE Subject = ?");
+            pstmt.setString(1, "JAVA");
+            ResultSet rs = pstmt.executeQuery();
+
+            System.out.println("Details of Teachers teaching JAVA subject:");
+            while (rs.next()) {
+                System.out.println("YNO: " + rs.getInt("YNO") + ", TName: " + rs.getString("TName") + ", Subject: " + rs.getString("Subject"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
