@@ -1,0 +1,99 @@
+set a
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Voter Eligibility</title>
+</head>
+<body>
+	<%
+		String name = request.getParameter("name");
+		int age = Integer.parseInt(request.getParameter("age"));
+		String message = "";
+		
+		if (age >= 18) {
+			message = "Congratulations, " + name + "! You are eligible to vote.";
+		} else {
+			message = "Sorry, " + name + "! You are not eligible to vote yet.";
+		}
+	%>
+	
+	<h3><%= message %></h3>
+	
+</body>
+</html>
+
+set b
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.sql.*;
+
+public class Slip25DDLQueryProgram extends JFrame implements ActionListener {
+
+    private JLabel queryLabel;
+    private JTextField queryTextField;
+    private JButton createButton, alterButton, dropButton;
+
+    public Slip25DDLQueryProgram() {
+        // set up GUI components
+        queryLabel = new JLabel("Type Your DDL Query Here:");
+        queryTextField = new JTextField(40);
+        createButton = new JButton("Create Table");
+        alterButton = new JButton("Alter Table");
+        dropButton = new JButton("Drop Table");
+
+        // add action listeners to buttons
+        createButton.addActionListener(this);
+        alterButton.addActionListener(this);
+        dropButton.addActionListener(this);
+
+        // add components to content pane
+        Container c = getContentPane();
+        c.setLayout(new BorderLayout());
+        JPanel queryPanel = new JPanel(new FlowLayout());
+        queryPanel.add(queryLabel);
+        queryPanel.add(queryTextField);
+        c.add(queryPanel, BorderLayout.NORTH);
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(createButton);
+        buttonPanel.add(alterButton);
+        buttonPanel.add(dropButton);
+        c.add(buttonPanel, BorderLayout.SOUTH);
+
+        // set frame properties
+        setTitle("DDL Query Program");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String query = queryTextField.getText();
+        String buttonLabel = e.getActionCommand();
+
+        // execute appropriate DDL query based on button clicked
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "password");
+            Statement stmt = con.createStatement();
+            if (buttonLabel.equals("Create Table")) {
+                stmt.executeUpdate(query);
+                JOptionPane.showMessageDialog(this, "Table created successfully!");
+            } else if (buttonLabel.equals("Alter Table")) {
+                stmt.executeUpdate(query);
+                JOptionPane.showMessageDialog(this, "Table altered successfully!");
+            } else if (buttonLabel.equals("Drop Table")) {
+                stmt.executeUpdate(query);
+                JOptionPane.showMessageDialog(this, "Table dropped successfully!");
+            }
+            con.close();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        new Slip25DDLQueryProgram();
+    }
+}
