@@ -1,0 +1,95 @@
+set a
+import java.util.Scanner;
+import java.util.TreeSet;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Create a TreeSet to store the integers
+        TreeSet<Integer> set = new TreeSet<>();
+
+        // Accept n integers from the user
+        System.out.print("Enter the number of integers: ");
+        int n = scanner.nextInt();
+
+        System.out.println("Enter " + n + " integers:");
+        for (int i = 0; i < n; i++) {
+            int num = scanner.nextInt();
+            set.add(num);
+        }
+
+        // Display the integers in sorted order
+        System.out.println("Integers in sorted order:");
+        for (int num : set) {
+            System.out.println(num);
+        }
+
+        // Search for a particular element
+        System.out.print("Enter an element to search: ");
+        int searchNum = scanner.nextInt();
+        if (set.contains(searchNum)) {
+            System.out.println(searchNum + " found in the collection.");
+        } else {
+            System.out.println(searchNum + " not found in the collection.");
+        }
+    }
+}
+
+set b
+public class TrafficSignal {
+    private final Object lock = new Object();
+    private int currentLight = 0;
+    private final String[] LIGHTS = {"Red", "Yellow", "Green"};
+    private final int[] DURATIONS = {10, 2, 10};
+
+    private class Signal implements Runnable {
+        private final int lightIndex;
+        private final int duration;
+
+        public Signal(int lightIndex, int duration) {
+            this.lightIndex = lightIndex;
+            this.duration = duration;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                synchronized (lock) {
+                    while (currentLight != lightIndex) {
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            return;
+                        }
+                    }
+                    System.out.println(LIGHTS[lightIndex] + " light is on for " + duration + " seconds.");
+                    try {
+                        Thread.sleep(duration * 1000);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
+                    currentLight = (currentLight + 1) % 3;
+                    System.out.println(LIGHTS[lightIndex] + " light is off.");
+                    lock.notifyAll();
+                }
+            }
+        }
+    }
+
+    public TrafficSignal() {
+        Thread[] threads = new Thread[3];
+        for (int i = 0; i < 3; i++) {
+            threads[i] = new Thread(new Signal(i, DURATIONS[i]));
+        }
+        for (Thread thread : threads) {
+            thread.start();
+        }
+    }
+
+    public static void main(String[] args) {
+        TrafficSignal trafficSignal = new TrafficSignal();
+    }
+}
