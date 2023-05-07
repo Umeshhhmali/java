@@ -1,0 +1,59 @@
+set a
+import java.sql.*;
+
+public class Slip29DisplayDonarTableColumn {
+   public static void main(String[] args) throws Exception {
+      // Load the JDBC driver
+      Class.forName("com.mysql.jdbc.Driver");
+      
+      // Connect to the database
+      Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydatabase", "root", "password");
+
+      // Create a statement
+      Statement stmt = conn.createStatement();
+
+      // Execute the query
+      ResultSet rs = stmt.executeQuery("SELECT * FROM DONAR");
+
+      // Get the metadata
+      ResultSetMetaData rsmd = rs.getMetaData();
+
+      // Get the number of columns
+      int numColumns = rsmd.getColumnCount();
+
+      // Print the column names and types
+      for (int i = 1; i <= numColumns; i++) {
+         System.out.println("Column Name: " + rsmd.getColumnName(i));
+         System.out.println("Column Type: " + rsmd.getColumnTypeName(i));
+         System.out.println();
+      }
+
+      // Close the connection
+      conn.close();
+   }
+}
+
+
+set b
+import java.util.LinkedList;
+
+public class Slip29LinkedListDemo {
+    public static void main(String[] args) {
+        LinkedList<Integer> list = new LinkedList<Integer>();
+
+        // Adding elements at the beginning of the linked list
+        list.addFirst(10);
+        list.addFirst(20);
+        list.addFirst(30);
+
+        System.out.println("LinkedList after adding elements at the beginning: " + list);
+
+        // Deleting the last element of the linked list
+        list.removeLast();
+
+        System.out.println("LinkedList after deleting last element: " + list);
+
+        // Displaying the size of the linked list
+        System.out.println("Size of the linked list: " + list.size());
+    }
+}
